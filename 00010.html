@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>00010Dale</title>
+</head>
+<body>
+
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script>
+
+    d3.json("member.json",function(error,root) {
+
+
+        if (error) {
+            return console.log(error);
+        }
+        console.log(root);
+
+
+
+        var u=window.location.href;
+        var ur=u.split('?')[1];
+        var url=ur.split('=')[1];
+        console.log(url);
+        var urlf=url.replace(/_/g, ' ');
+        console.log(urlf);
+
+
+        for (i = 0; i < root.length; i++) {
+
+            (1) //先把member里面的   split分割了
+            //新的数组
+
+            (2)//!!!! js的database!!!!!!!!!!
+
+            if (urlf==root[i]["Members"]){
+
+               console.log(root[i]["Title"]);
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+    })
+
+
+
+
+
+</script>
+
+</body>
+</html>
