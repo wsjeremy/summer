@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project</title>
+</head>
+
+
+
+<style>
+
+    .matrix1 {
+
+        fill: white;
+    }
+
+
+    .labeltext0 {
+        font-size: 36px ;
+        font-family: SimSun;
+        fill:#000001;
+    }
+
+
+    .labeltext1 {
+        font-size: 20px ;
+        font-family: SimSun;
+        fill:red;
+    }
+
+    .nodetext {
+        font-size: 20px ;
+        font-family: SimSun;
+        fill:#000000;
+    }
+
+    .text {
+        font-size: 9px ;
+        font-family: SimSun;
+        fill:black;
+        fontWeight:"1900"
+    }
+
+
+
+</style>
+
+
+
+
+<body>
+
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+
+
+<script src="duplicate.js" charset="utf-8"></script>
+<script src="multext.js" charset="utf-8"></script>
+
+
+
+
+<script>
+
+    //造  svg  画布!
+    var width = 1500;	//画布的宽度
+    var height = 1500;	//画布的高度
+
+    var color = d3.scale.category10();//构造一个10中颜色的序数比例尺
+    // var padding = { left:80, right:50, top:20, bottom:30};
+
+
+
+    // 在body中添加一个  svg 画布
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width",width)
+            .attr("height",height)
+            .attr("fill", "grey")
+            ;
+
+
+    svg.append("rect")
+            .attr("width", "100%")
+            .attr("height", "100%")
+    //.attr("fill", "grey");
+    //如果把 .attr("fill", "grey"); 加到append("rect")之后
+    // 就是在这个画布上, 增加一个与画布同样大小的矩形,并且 染成灰色
+
+
+    var label1 = svg.append("text")
+            .attr("class","labeltext0")
+            .attr("x",700)
+            .attr("y",30)
+            .text("Domain");
+
+
+    var label10= svg.append("text")
+            .attr("class","labeltext1")
+            .attr("x",300)
+            .attr("y",125)
+            .text("Population")
+            ;
+
+    var label11= svg.append("text")
+            .attr("class","labeltext1")
+            .attr("x",650)
+            .attr("y",125)
+            .text("Biology")
+            ;
+
+    var label12= svg.append("text")
+            .attr("class","labeltext1")
+            .attr("x",870)
+            .attr("y",125)
+            .text("Society and Environment")
+            ;
+
+    var label13= svg.append("text")
+            .attr("class","labeltext1")
+            .attr("x",1250)
+            .attr("y",125)
+            .text("Solutions")
+            ;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    var label2 = svg.append("text")
+            .attr("class","labeltext0")
+            .attr("x",10)
+            .attr("y",710)
+            .text("Theme")
+            ;
+
+    var str1 = "Nutrition";
+
+    var M=appendMultiText(svg,str1,155,300,40,20,"simsun",0,0);
+
+    //在 svg 容器里的坐标(300, 300)处添加指定字符串，
+    // 每一行的长度为200个像素，超出的部分自动换行，字体大小为20，字体为宋体
+
+    // appendMultiText自动为我们添加了<text >和<tspan>。
+
+    M.attr("transform","rotate(0)")
+            .attr("fill","red")
+    ;
+
+
+
+
+    var str2 = "PAEEE";
+
+    var M=appendMultiText(svg,str2,140,600,60,20,"simsun",1,0);
+
+    //在 svg 容器里的坐标(300, 300)处添加指定字符串，
+    // 每一行的长度为200个像素，超出的部分自动换行，字体大小为20，字体为宋体
+
+    // appendMultiText自动为我们添加了<text >和<tspan>。
+
+    M.attr("transform","rotate(0)")
+            .attr("fill","red")
+    ;
+
+
+
+
+    var str3 = "Politics, governance and  ethics";
+
+    var M=appendMultiText(svg,str3,125,850,80,20,"simsun",2,0);
+
+    //在 svg 容器里的坐标(300, 300)处添加指定字符串，
+    // 每一行的长度为200个像素，超出的部分自动换行，字体大小为20，字体为宋体
+
+    // appendMultiText自动为我们添加了<text >和<tspan>。
+
+    M.attr("transform","rotate(0)")
+            .attr("fill","red")
+    ;
+
+
+
+    var str4 = "Complex systems and modelling";
+
+    var M=appendMultiText(svg,str4,130,1150,80,20,"simsun",3,0);
+
+    //在 svg 容器里的坐标(300, 300)处添加指定字符串，
+    // 每一行的长度为200个像素，超出的部分自动换行，字体大小为20，字体为宋体
+
+    // appendMultiText自动为我们添加了<text >和<tspan>。
+
+    M.attr("transform","rotate(0)")
+            .attr("fill","red")
+    ;
+
+
+
+    //====================================================================================
+    var rw1 =300;
+    var rh1 =300;
+
+
+    var data1 = [];
+    for (var k=0; k<4; k++){
+        //k 是控制 行数
+        data1.push(d3.range(4));
+        //range里面的值是控制列数
+
+    };
+    //data =Array[4]  相当于是一个包含 4个元素(4行)的array, 每一个元素也是一个array:0,1,2,3
+    console.log(data1);
+
+
+
+
+    var rec1 =svg.selectAll('g')
+            .data(data1)
+            .enter()
+            .append('g')
+            .attr('transform', function(d, i) {
+                return '    translate(   220 ,     ' +(305 * i+150) +  '     )   ';
+                //这个是在 确认 每一行每一行的 距离
+            });
+
+    rec1.selectAll('rect')
+            .data(function(d) { return d; })
+            //这return的就是d, 不是当前元素的子元素
+            // 已经 绑定完一次数据了, 这次再绑定是
+            // 绑定数据里面的 inner array
+
+            //.data(data1)
+
+            .enter()
+            .append('rect')
+            .attr('x', function(d, i) { return 305 * i; })
+            .attr('width', rw1)
+            .attr('height', rh1)
+            .attr("class","matrix1");
+
+
+
+    //====================================================================================
+
+
+    d3.json("projectClassified.json",function(error,root) {
+
+
+        if (error) {
+            return console.log(error);
+        }
+        console.log(root);
+
+
+        var ar = [];
+        var arr = [];
+        var arra = [];
+        var array = [];
+
+
+
+        for (i = 0; i < root.length; i++) {
+            //console.log("%s", root[i]["Title"]);
+            //console.log("%s", root[i]["Main_Domain"]);
+            //console.log("%s", root[i]["Main_Theme"]);
+
+
+            switch (root[i]["Main_Domain"]) {
+                case "Biology":
+                    ar.push(root[i]["Title"]);
+                    break;
+                case "Society and Environment":
+                    arr.push(root[i]["Title"]);
+                    break;
+                case "Solutions":
+                    arra.push(root[i]["Title"]);
+                    break;
+
+
+                default:
+                    array.push(root[i]["Title"]);
+            }
+
+        }
+
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        var br = [];
+        var brr = [];
+        var brra = [];
+        var brray = [];
+
+
+
+        for (i = 0; i < root.length; i++) {
+            //console.log("%s", root[i]["Title"]);
+            //console.log("%s", root[i]["Main_Domain"]);
+            //console.log("%s", root[i]["Main_Theme"]);
+
+
+            switch (root[i]["Main_Theme"]) {
+                case "Nutrition":
+                    br.push(root[i]["Title"]);
+                    break;
+                case "PAEEE":
+                    brr.push(root[i]["Title"]);
+                    break;
+                case "Politics, governance and ethics":
+                    brra.push(root[i]["Title"]);
+                    break;
+
+
+                default:
+                    brray.push(root[i]["Title"]);
+            }
+
+        }
+
+
+
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q00 =br.concat(array);
+        console.log(q00);
+        var q00u=duplicate(q00);
+        console.log(q00u);
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q01 =br.concat(ar);
+        console.log(q01);
+        var q01u=duplicate(q01);
+        console.log(q01u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q02 =br.concat(arr);
+        console.log(q02);
+        var q02u=duplicate(q02);
+        console.log(q02u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q03 =br.concat(arra);
+        console.log(q03);
+        var q03u=duplicate(q03);
+        console.log(q03u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q10 =brr.concat(array);
+        console.log(q10);
+        var q10u=duplicate(q10);
+        console.log(q10u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q11 =brr.concat(ar);
+        console.log(q11);
+        var q11u=duplicate(q11);
+        console.log(q11u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q12 =brr.concat(arr);
+        console.log(q12);
+        var q12u=duplicate(q12);
+        console.log(q12u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q13 =brr.concat(arra);
+        console.log(q13);
+        var q13u=duplicate(q13);
+        console.log(q13u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        // 第三行第一列
+        var q20 =brra.concat(array);
+        console.log(q20);
+        var q20u=duplicate(q20);
+        console.log(q20u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q21 =brra.concat(ar);
+        console.log(q21);
+        var q21u=duplicate(q21);
+        console.log(q21u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q22 =brra.concat(arr);
+        console.log(q22);
+        var q22u=duplicate(q22);
+        console.log(q22u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q23 =brra.concat(arra);
+        console.log(q23);
+        var q23u=duplicate(q23);
+        console.log(q23u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q30 =brray.concat(array);
+        console.log(q30);
+        var q30u=duplicate(q30);
+        console.log(q30u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q31 =brray.concat(ar);
+        console.log(q31);
+        var q31u=duplicate(q31);
+        console.log(q31u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q32 =brray.concat(arr);
+        console.log(q32);
+        var q32u=duplicate(q32);
+        console.log(q32u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        var q33 =brray.concat(arra);
+        console.log(q33);
+        var q33u=duplicate(q33);
+        console.log(q33u);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+////================================================================================
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////================================================================================
+
+        ark01=[];
+        c01=[];
+        for(p01=0;p01<q01u.length;p01++){
+
+
+            c01[p01]=[580+p01*20,200+p01*24];
+
+            ark01.push(c01[p01]);
+
+        }
+
+        console.log(ark01);
+        console.log(q01u);
+
+
+////=====================================================================================
+////=====================================================================================
+
+
+        var node01=svg.selectAll("circle")
+                .data(ark01)
+                .enter()
+                .append("circle")
+                .attr("cx",560)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+                    return "01"+i.toString()
+                    //这是变成  010字符窜  011   012   013
+                })
+                //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                //增加一个mat属性!
+                //下面也在text上增加一个mat属性!
+                //这样node对应的一个mat属性也与 text对应的一个mat属性
+                //相互对应
+                //那就通过这个node,对应到这个text
+                //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                .attr("fill","yellow")
+
+                .on("click",function(d,i){
+
+                    var mat=this.getAttribute("mat");
+                    // 得到这个node的 mat属性值
+                    var Title=document.querySelector("text[mat='"+mat+"']").innerHTML;
+
+                    //querySelector就是去js中找对应值用的
+                    //text里面的mat属性  若等于 定义的var mat属性
+                    //就把text里面的innerHTML做出来
+
+                    //根据node的mat值与text的mat值对应之后,取得text里面的innerHTML
+                    //这个innerHTML也就是 每一个text的名字
+                    // ' ' 单引号是js 识别, " "  是关联字符窜
+
+                  var url01=Title.replace(/ /g, '_');
+                  console.log(url01);
+
+                    window.location.href="/WebstormProjects/summer/01/01"+(i).toString() + ".html?="+url01;
+                    //取得新的url页面!! 正式把 project名传到 新的,重定向的url里面
+                    // 在新的页面中就是从url中取得value值进来
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        for(u01=0;u01<parseInt(q01u.length/2)+1;u01++) {
+
+            var text010 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 535)
+                    .attr("y", 200+u01*24)
+                    //.attr("y", 200)
+                    .text(q01u[u01])
+
+                    .attr("mat","01"+u01.toString())
+
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 550+u01*20)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+        for(t01=parseInt(q01u.length/2)+1;t01<q01u.length;t01++) {
+
+            var text011 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 480+t01*20)
+                    .attr("x", 535)
+                    .attr("y", 205+t01*24)
+                    .text(q01u[t01])
+
+                    .attr("mat","01"+t01.toString())
+
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 450+t01*20)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+
+
+
+                    ;
+
+        }
+
+////=====================================================================================
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//////================================================================================
+
+        ark00=[];
+        c00=[];
+
+        for(p00=0;p00<q00u.length;p00++){
+
+
+            c00[p00]=[300+p00*20,300+p00*24];
+            ark00.push(c00[p00]);
+
+        }
+
+        console.log(ark00);
+        console.log(q00u);
+
+
+//////=====================================================================================
+////=====================================================================================
+
+
+////=========================================================================
+
+//-----------------------------------------------------------------------------
+//        var node00=svg
+//                .append("circle")
+//
+//                .attr("cx",300)//  这个地方一定要定义一下,才能实现
+//                //从x轴原本的位置 到达 x轴之后的位置
+//                //从而完成动画效果
+//                .attr("cy", 200)
+//                .attr("r", 9)
+//                .attr("fill","red")
+//
+//                //.on("click",window.location.href="pieChart.html")
+//
+//                .on("click", mouseClick)
+//
+//
+//                .transition()
+//                .delay(1000)
+//
+//                .duration(2000)
+//
+//                .ease("bounce")
+//                .attr("cx", 350)// 动x就可以了!!!  不然 动y, x轴会在横轴
+//
+//                ;
+
+        //这个方法是通过 直接在画布上  选择一个
+        //特定的位置去 添加 一个原点!!!!
+
+//-------------------------------------------------------------------------------
+
+
+//*************************************************************************
+//        function mouseClick() {
+//            window.location.href="drag.html" ;
+//        }
+
+
+        // 这样放在外部定义的话就可以了!!就不会秒跳转!!!!
+        //!!!!!!!!!!!!!
+
+//**************************************************************************
+
+
+
+
+        var node00=svg.selectAll("c")
+                .data(ark00)
+                .enter()
+                .append("circle")
+                .attr("cx",300)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+
+                    return "00"+ i.toString()
+                })
+
+                .attr("fill","yellow")
+
+                //                .on("click", mouseClick)
+                ////!!!!!!!!!!!!!!!!!!!!
+                ////!!!!!!!!!!!!!!!!!!!
+                //// On 事件必须在transition事件之前
+
+                .on("click",function(d,i){
+
+                    var mat=this.getAttribute("mat");
+                    // 得到这个node的 mat属性值
+                    var Title=document.querySelector("text[mat='"+mat+"']").innerHTML;
+                    //根据node的mat值与text的mat值对应之后,取得text里面的innerHTML
+                    //这个innerHTML也就是 每一个text的名字
+                    // ' ' 单引号是js 识别, " "  是关联字符窜
+                    var url00=Title.replace(/ /g,'_');
+                    window.location.href="/WebstormProjects/summer/00/00"+(i).toString()+ ".html?="+url00;
+                    //window.location.href="/WebstormProjects/0color"+ ".html?="+url00;
+                    //取得新的url页面!! 正式把 project名传到 新的,重定向的url里面
+                    // 在新的页面中就是从url中取得value值进来
+
+                })
+
+                .transition()
+                .delay(1000)
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", 350)// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+
+                ;
+
+
+
+
+
+
+        for(u00=0;u00<parseInt(q00u.length/2)+1;u00++) {
+
+            var text000 = svg.append("text")
+                    .attr("class", "text")
+                    .attr("x", 230)
+                    .attr("y", 300+u00*24)
+                    .text(q00u[u00])
+
+                    .attr("mat","00"+u00.toString())
+
+                    .attr("text-anchor", "start")
+
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 260+u00*20)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+
+                    ;
+
+        }
+
+        for(t00=parseInt(q00u.length/2)+1;t00<q00u.length;t00++) {
+
+            var text001 = svg.append("text")
+                    .attr("class", "text")
+                    .attr("x", 280+t00*20)
+                    .attr("y", 205+t00*24)
+                    .text(q00u[t00])
+                    .attr("mat","00"+t00.toString())
+                    .attr("text-anchor", "start")
+                    ;
+
+        }
+
+//        var text00= svg.append("text")
+//                .attr("class","text")
+//                .attr("x",300)
+//                .attr("y",200)
+//                .text(q00u[0])
+//                ;
+
+//只所以昨天没法靠 数组 去添加text
+//是因为 我此时数组中就只有一个元素.然后parseInt(q00u.length/2)取得的是0
+//所以没法执行循环!
+
+
+
+////=====================================================================================
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark02=[];
+        c02=[];
+
+        for(p02=0;p02<q02u.length;p02++){
+
+
+            c02[p02]=[920+p02*17,220+p02*34];
+            ark02.push(c02[p02]);
+
+        }
+
+        console.log(ark02);
+        console.log(q02u);
+
+        var node02=svg.selectAll("ci")
+                .data(ark02)
+                .enter()
+                .append("circle")
+                .attr("cx",880)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+                    return "02"+ i.toString()
+                })
+
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+        for(u02=0;u02<q02u.length;u02++) {
+            var text020 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 835)
+                    .attr("y", 220+u02*34)
+                    //.attr("y", 200)
+                    .text(q02u[u02])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 840+u02*17)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+        ark03=[];
+        c03=[];
+
+        for(p03=0;p03<q03u.length;p03++){
+
+
+            c03[p03]=[1270+p03*20,230+p03*34];
+            ark03.push(c03[p03]);
+
+        }
+
+        console.log(ark03);
+        console.log(q03u);
+
+        var node03=svg.selectAll("cic")
+                .data(ark03)
+                .enter()
+                .append("circle")
+                .attr("cx",1200)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+
+        for(u03=0;u03<q03u.length;u03++) {
+            var text030 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 1150)
+                    .attr("y", 230+u03*34)
+                    //.attr("y", 200)
+                    .text(q03u[u03])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 1180+u03*20)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark10=[];
+        c10=[];
+
+        for(p10=0;p10<q10u.length;p10++){
+
+
+            c10[p10]=[350+p10*24,590+p10*50];
+            ark10.push(c10[p10]);
+
+        }
+
+        console.log(ark10);
+        console.log(q10u);
+
+        var node10=svg.selectAll("cicc")
+                .data(ark10)
+                .enter()
+                .append("circle")
+                .attr("cx",300)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+
+        for(u10=0;u10<q10u.length;u10++) {
+            var text100 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 300)
+                    .attr("y", 590+u10*50)
+                    //.attr("y", 200)
+                    .text(q10u[u10])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 350+u10*24)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+        ark11=[];
+        c11=[];
+
+        for(p11=0;p11<q11u.length;p11++){
+
+
+            c11[p11]=[680+p11*24,590+p11*50];
+            ark11.push(c11[p11]);
+
+        }
+
+        console.log(ark11);
+        console.log(q11u);
+
+        var node11=svg.selectAll("ciccc")
+                .data(ark11)
+                .enter()
+                .append("circle")
+                .attr("cx",580)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+
+        for(u11=0;u11<q11u.length;u11++) {
+            var text110 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 533)
+                    .attr("y", 590+u11*55)
+                    //.attr("y", 200)
+                    .text(q11u[u11])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 547+u11*24)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+        ark12=[];
+        c12=[];
+
+        for(p12=0;p12<q12u.length;p12++){
+
+
+            c12[p12]=[980+p12*24,520+p12*50];
+            ark12.push(c12[p12]);
+
+        }
+
+        console.log(ark12);
+        console.log(q12u);
+
+        var node12=svg.selectAll("cicccc")
+                .data(ark12)
+                .enter()
+                .append("circle")
+                .attr("cx",880)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+
+        for(u12=0;u12<q12u.length;u12++) {
+            var text120 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 840)
+                    .attr("y", 520+u12*50)
+                    //.attr("y", 200)
+                    .text(q12u[u12])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 880+u12*24)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark13=[];
+        c13=[];
+
+        for(p13=0;p13<q13u.length;p13++){
+
+
+            c13[p13]=[1250+p13*24,520+p13*50];
+            ark13.push(c13[p13]);
+
+        }
+
+        console.log(ark13);
+        console.log(q13u);
+
+        var node13=svg.selectAll("ciccccc")
+                .data(ark13)
+                .enter()
+                .append("circle")
+                .attr("cx",1180)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        //for(u02=0;u02<parseInt(q02u.length/2)+1;u02++) {
+
+
+
+        for(u13=0;u13<q13u.length;u13++) {
+            var text130 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 1140)
+                    .attr("y", 520+u13*50)
+                    //.attr("y", 200)
+                    .text(q13u[u13])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 1200+u13*24)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark20=[];
+        c20=[];
+
+        for(p20=0;p20<q20u.length;p20++){
+
+
+            c20[p20]=[280+p20*60,780+p20*98];
+            ark20.push(c20[p20]);
+
+        }
+
+        console.log(ark20);
+        console.log(q20u);
+
+        var node20=svg.selectAll("cicck")
+                .data(ark20)
+                .enter()
+                .append("circle")
+                .attr("cx",250)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+
+                .attr("mat",function(d,i){
+                    return "20"+i.toString()
+                })
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //因为还有许多地方都在调用 appendMultiText
+                //所以 在appendMultiText这个js文件中添加 变量!
+                //只有就可以达到变动的目的
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"color.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+        pppstring20=[];
+        for(var ppp20=0;ppp20<q20u.length;ppp20++){
+
+            pppstring20.push(appendMultiText(svg,q20u[ppp20],230+ppp20*10,780+ppp20*98,38+ppp20*55,9,"simsun",20,ppp20));
+
+            // 哪里定义添加 text 属性的时候
+            //就在那里  添加 mat属性!
+
+        }
+
+
+
+
+        console.log(pppstring20);
+
+
+
+//////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        ark21=[];
+        c21=[];
+
+        for(p21=0;p21<q21u.length;p21++){
+
+
+            c21[p21]=[680+p21*60,890+p21*98];
+            ark21.push(c21[p21]);
+
+        }
+
+        console.log(ark21);
+        console.log(q21u);
+
+        var node21=svg.selectAll("cicckc")
+                .data(ark21)
+                .enter()
+                .append("circle")
+                .attr("cx",600)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+
+        for(u21=0;u21<q21u.length+1;u21++) {
+            var text210 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 600)
+                    .attr("y", 910+u21*50)
+                    //.attr("y", 200)
+                    .text(q21u[u21])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(500)
+
+                    .duration(1500)
+
+                    .ease("circle")
+                    .attr("x", 650+u21*24)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+//////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark22=[];
+        c22=[];
+
+        for(p22=0;p22<q22u.length;p22++){
+
+
+            c22[p22]=[985+p22*60,850+p22*98];
+            ark22.push(c22[p22]);
+
+        }
+
+        console.log(ark22);
+        console.log(q22u);
+
+        var node22=svg.selectAll("cicckcc")
+                .data(ark22)
+                .enter()
+                .append("circle")
+                .attr("cx",900)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+
+        for(u22=0;u22<q22u.length;u22++) {
+            var text220 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 840)
+                    .attr("y", 860+u22*95)
+                    //.attr("y", 200)
+                    .text(q22u[u22])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(500)
+
+                    .duration(1500)
+
+                    .ease("circle")
+                    .attr("x", 900+u22*37)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+//////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        ark23=[];
+        c23=[];
+
+        for(p23=0;p23<q23u.length;p23++){
+
+
+            c23[p23]=[1300+p23*60,850+p23*98];
+            ark23.push(c23[p23]);
+
+        }
+
+        console.log(ark23);
+        console.log(q23u);
+
+        var node23=svg.selectAll("cicckckc")
+                .data(ark23)
+                .enter()
+                .append("circle")
+                .attr("cx",1200)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+                    return "23"+i.toString()
+                })
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+        pppstring23=[];
+        for(ppp23=0;ppp23<q23u.length;ppp23++){
+
+            pppstring23.push(appendMultiText(svg,q23u[ppp23],1200+ppp23*64,830+ppp23*115,88+ppp23*75,9,"simsun",23,ppp23));
+
+
+
+        }
+
+        console.log(pppstring20);
+
+
+
+
+//////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark30=[];
+        c30=[];
+
+        for(p30=0;p30<q30u.length;p30++){
+
+
+            c30[p30]=[307+p30*35,1100+p30*45];
+            ark30.push(c30[p30]);
+
+        }
+
+        console.log(ark30);
+        console.log(q30u);
+
+        var node30=svg.selectAll("cicckf")
+                .data(ark30)
+                .enter()
+                .append("circle")
+                .attr("cx",235)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+                    return "30"+i.toString()
+                })
+
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+        pppstring30=[];
+        for(ppp30=0;ppp30<q30u.length;ppp30++){
+
+            pppstring30.push(appendMultiText(svg,q30u[ppp30],240+ppp30*35,1070+ppp30*53,45+ppp30*18,9,"simsun",30,ppp30));
+
+
+
+        }
+
+        console.log(pppstring30);
+
+
+//
+
+//////=====================================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        ark31=[];
+        c31=[];
+
+        for(p31=0;p31<q31u.length;p31++){
+
+
+            c31[p31]=[580+p31*25,1080+p31*27];
+
+            ark31.push(c31[p31]);
+
+        }
+
+        console.log(ark31);
+        console.log(q31u);
+
+
+        var node31=svg.selectAll("clircle")
+                .data(ark31)
+                .enter()
+                .append("circle")
+                .attr("cx",560)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        for(u31=0;u31<parseInt(q31u.length/2)+1;u31++) {
+
+            var text310 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 530)
+                    .attr("y", 1080+u31*27)
+                    //.attr("y", 200)
+                    .text(q31u[u31])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 530+u31*15)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+        for(t31=parseInt(q31u.length/2)+1;t31<q31u.length;t31++) {
+
+            var text311 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 480+t01*20)
+                    .attr("x", 530)
+                    .attr("y", 1085+t31*27)
+                    .text(q31u[t31])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 530+t31*4)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+
+
+
+                    ;
+
+        }
+
+////=====================================================================================
+////=====================================================================================
+
+        ark32=[];
+        c32=[];
+
+        for(p32=0;p32<q32u.length;p32++){
+
+
+            c32[p32]=[980+p32*25,1130+p32*110];
+
+            ark32.push(c32[p32]);
+
+        }
+
+        console.log(ark32);
+        console.log(q32u);
+
+
+        var node32=svg.selectAll("czlircle")
+                .data(ark32)
+                .enter()
+                .append("circle")
+                .attr("cx",880)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+
+
+        for(u32=0;u32<q32u.length;u32++) {
+
+            var text320 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 580+u01*20)
+                    .attr("x", 835)
+                    .attr("y", 1130+u32*110)
+                    //.attr("y", 200)
+                    .text(q32u[u32])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 880+u32*10)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+                    ;
+
+        }
+
+
+
+////=====================================================================================
+////=====================================================================================
+
+        ark33=[];
+        c33=[];
+
+        for(p33=0;p33<q33u.length;p33++){
+
+
+            c33[p33]=[1150+p33*25,1080+p33*27];
+//            c31[p31]=[580+p31*25,1080+p31*27];
+            ark33.push(c33[p33]);
+
+        }
+
+        console.log(ark33);
+        console.log(q33u);
+
+
+        var node33=svg.selectAll("czlircle")
+                .data(ark33)
+                .enter()
+                .append("circle")
+                .attr("cx",1150)//  这个地方一定要定义一下,才能实现
+                //从x轴原本的位置 到达 x轴之后的位置
+                //从而完成动画效果
+                .attr("cy", function(d) {
+                    return d[1];
+                })
+                .attr("r", 9)
+
+                .attr("mat",function(d,i){
+                    return "33"+i.toString()
+                })
+
+                .attr("fill","yellow")
+                .on("click",function(d,i){
+
+                    window.location.href=(i).toString() +"dynamics.html";
+                })
+
+
+                //!!!!!!!!根据这个做不同的url!!!!
+
+
+                .transition()
+                .delay(function(d,i){
+                    return i * 200;
+                })
+
+                .duration(2000)
+
+                .ease("bounce")
+                .attr("cx", function(d) {
+                    return d[0];
+                })// 动x就可以了!!!  不然 动y, x轴会在横轴
+
+                ;
+
+
+
+        pppstring33=[];
+        for(ppp33=0;ppp33<parseInt(q33u.length/2)+1;ppp33++){
+
+            pppstring33.push(appendMultiText(svg,q33u[ppp33],1150+ppp33*7,1070+ppp33*29,205+ppp33*18,9,"simsun",33,ppp33));
+
+
+
+        }
+
+        console.log(pppstring33);
+
+
+        for(t33=parseInt(q33u.length/2)+1;t33<q33u.length;t33++) {
+
+            var text331 = svg.append("text")
+                    .attr("class", "text")
+                    //.attr("x", 480+t01*20)
+                    .attr("x", 1150)
+                    .attr("y", 1085+t33*27)
+                    .text(q33u[t33])
+                    .attr("text-anchor", "start")
+
+                    .transition()
+
+                    .delay(1000)
+
+                    .duration(2000)
+
+                    .ease("circle")
+                    .attr("x", 1140+t33*4)// 动x就可以了!!!  不然 动y, x轴会在横轴
+            //.attr("y", 200+u01*24)
+
+
+
+
+                    ;
+
+        }
+
+
+////=====================================================================================
+////=====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+
+
+
+
+</script>
+
+</body>
+</html>
