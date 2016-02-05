@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+</head>
+<style>
+
+    .nodetext {
+        font-size: 9px ;
+        font-family: SimSun;
+        fill:#000000;
+    }
+
+    .labeltext0 {
+        font-size: 16px ;
+        font-family: SimSun;
+        font-weight:bold;
+        fill:#000001;
+    }
+
+    .node circle {
+        stroke: black;
+        stroke-width: 2px;
+    }
+
+    .node text{
+        font-size: 12px;
+        font-family: simsun;
+        font-weight:bold;
+        fill-opacity:0.0;
+    }
+
+
+    .centext{
+        font-size: 12px;
+        font-family: simsun;
+        font-weight:bold;
+    }
+
+    .tooltip{
+        position: absolute;
+        width: auto;
+
+        height: auto;
+        font-family: simsun;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+
+
+
+</style>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script src="deleteduplicate00.js" charset="utf-8"></script>
+<script src="unique.js" charset="utf-8"></script>
+
+
+
+<a href="/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen" >
+
+<img border="0" src="/xujinpeng1/Desktop/1.png " />
+
+</a>
+
+<script>
+
+
+    var width = 1800;
+    var height = 1800;
+
+
+
+    var color = d3.scale.category20();
+
+
+
+    var svg = d3.select("body").append("svg")
+            .attr("width",width)
+            .attr("height",height);
+
+
+
+
+    var tooltip = d3.select("body")
+            .append("div")
+            .attr("class","tooltip")
+            .style("opacity",0.0);
+
+
+
+
+    d3.json("/WebstormProjects/summer/member.json",function(error,root) {
+
+
+        if (error) {
+            return console.log(error);
+        }
+        console.log(root);
+
+
+        var u = window.location.href;
+        var ur = u.split('?')[1];
+        var url = ur.split('=')[1];
+        console.log(url);
+        var urlf = url.replace(/_/g, ' ');
+        console.log(urlf);
+
+
+        svg.append("rect")
+                .attr("width", urlf.length * 8)
+                .attr("height", 30)
+                .attr("fill", "yellow")
+                .attr('transform', 'translate(0,10)')
+        ;
+
+
+        var label = svg.append("text")
+                .attr("class", "labeltext0")
+                .attr("x", 0)
+                .attr("y", 30)
+                .text(urlf)
+                ;
+
+
+//==========================================================================
+        //把每一个title中的member都变成一个2个元素的数组
+        // 得到的  Simpson  分别给每个数组相比
+        //匹配了就得出这个i
+        //通过这个i获得  title
+
+
+        var a = [];
+        var b = "";
+        var c = 0;
+        var e = [];
+
+        var counter = 0;
+
+//        for (i = 0; i < root.length; i++) {
+
+
+        for (i = 0; i < root.length; i++) {
+
+            if (root[i]["Members"].match(/,/)) {
+
+                var y=root[i]["Members"].replace(/,/g, ' ');
+
+                console.log(y);
+
+//************************************************************************************
+
+
+                if (urlf == y) {
+                    e.push({"mi": counter, "Title": root[i]["Title"]});
+                    counter = counter + 1;
+
+                }
+
+
+
+
+
+            } else {
+                if (root[i]["Members"] == urlf) {
+                    e.push({"mi": counter, "Title": root[i]["Title"]});
+                    counter = counter + 1;
+                }
+            }
+
+
+        }
+
+        console.log(e);
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//只是对 e中的 这13个 project做  analysis
+
+
+        var pppp=[];
+
+
+
+        for(ooo in e){
+
+            for (i = 0; i < root.length; i++) {
+
+
+
+                if (e[ooo]["Title"]==root[i]["Title"]){
+                    //因为把一个title中的许多member分成了许多行
+                    //所以 在这里满足相等 满足了许多次
+                    //所以相当于在这里走了许多个循环
+
+                    console.log(root[i]["Members"]);
+
+
+                    if (root[i]["Members"].match(/,/)){
+
+                        var b=root[i]["Members"].replace(/,/g, ' ');
+                        console.log(b);
+
+
+
+                        a.push({"ki":c,"name":b});
+
+                        c=c+1;
+
+
+                    }
+
+                    else{
+                        a.push({"ki":i,"name":root[i]["Members"]});
+                        c=c+1;
+                    }
+
+                }
+
+
+
+
+            }
+
+
+            c=0;
+            pppp.push(a);
+            a=[];
+
+
+
+        }
+        console.log(pppp);
+        console.log(e);
+
+        for(bbbbi in e){
+
+            e[bbbbi]["mi"]=pppp[bbbbi].length
+
+
+            //通过分别修改 每个人的
+
+        }
+
+
+
+//==============================================================================
+//==============================================================================
+
+//
+//        var force = d3.layout.force()
+//                .nodes(e)
+//
+//                .size([600, 500])//  靠这个来控制pop up 出来的 位置~
+//
+//                .charge(-450)
+//                .start();
+//
+//
+//        var svg_nodes = svg.selectAll("circle")
+//                .data(e)
+//                .enter()
+//                .append("circle")
+//                .attr("r", function(d){
+//                    return d["mi"]*0.4;
+//                })
+//
+//
+//                //要改也是改这,  把e中的  属性给 改变!!!!
+//
+//
+//
+//
+//                .attr("mi", function (d) {
+//                    return d["mi"];
+//                    //d就是每一个object,
+//                    //return  每一个object的mi属性
+//                    //就是对应的一个一个 0,1,2,3,4,5,6,7,8,9,
+//                    //!!!!!
+//                    //这个是访问对象属性的方法
+//                    //每个对象之后 d[]来访问这个对象属性
+//                })
+//                //把 mi 属性给增加进node的每一个圆圈中去
+//
+//                .style("fill", function (d, i) {
+//                    return color(i);
+//                })
+//
+//
+//                .call(force.drag)
+//
+//
+//                ;
+//
+//
+////
+//        var nodes_text = svg.selectAll(".nodetext")
+//                .data(e)
+//                .enter()
+//                .append("text")
+//                .attr("class", "nodetext")
+//
+//                //                .attr("dx",-10)
+//                //                .attr("dy",-10)
+//                //                不要这2行就是直接从圆心的那个位置来添加text
+//
+//                .attr("mi", function (d) {
+//                    return d["mi"];
+//                })
+//                .style("text-anchor", "middle")
+//                .text(function (d) {
+//                    return d.Title;
+//                });
+//
+//
+//        force.on("tick", function () {
+//
+//
+//            svg_nodes.attr("cx", function (d) {
+//                return d.x + 2;
+//            });
+//            svg_nodes.attr("cy", function (d) {
+//                return d.y + 2;
+//            });
+//            //调这个可以调节  text 与node之间的 距离
+//
+//
+//            nodes_text.attr("x", function (d) {
+//                return d.x
+//            });
+//            nodes_text.attr("y", function (d) {
+//                return d.y
+//            });
+//        });
+
+
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        var k = [];
+        var h = "";
+
+
+        for(p=0;p< e.length;p++){//e就是上面筛选出来的这个Simpson他自己参与进多少个项目
+
+            for (i = 0; i < root.length; i++) {
+
+                //对于每一个项目, 都所有的都遍历一遍,
+                //因为原始数据里面 同一个项目出现了很多次
+
+                if ((e[p]["Title"]) == root[i]["Title"]) {
+
+                    var h = root[i]["Members"].replace(/,/g, ' ');
+                    console.log(h);
+
+
+                    if(h!=urlf)
+                    //这是把作者自己本身过滤掉
+                    {
+                        k.push(h);
+                    }
+                    //自己设想的:
+                    //假使是 这个author 涉及进了3个项目  a,b,c
+                    // a中有张三, 李四
+                    // b中有张三, 王五
+                    // c中有许一
+
+
+                    //本来自己是想分别为a,b,c建造一个数组,共3个数组的
+                    //但是这样, 就是 除了作者本身, 全部涉及到不同项目的人都在一起了
+                    //这样也就是我想要获得的
+
+
+
+                }
+            }
+
+
+        }
+
+        console.log(k);
+        console.log(k.length);
+
+
+
+
+        var kk=unique(k)
+        //k中虽然已经过滤掉了作者本身, 但是其他的member人员有重复 ,
+        //要把数据弄成 想 捆图里面的cities数组一样,就要把重复的给去掉
+
+        console.log(kk);
+        console.log(kk.length);
+
+
+
+//!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!
+
+
+
+////{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+//        var dataset ={startAngle:0, endAngle: Math.PI*2};
+//        //在pieChart里面之所以多转化了几下,
+//        //就是因为  要靠pie来把数据转化成  startAngle 和 endAngle这样
+//
+//
+//        //创建弧生成器
+//        var arcPath1 = d3.svg.arc()
+//                .innerRadius(100)
+//                .outerRadius(120);
+//
+//        //在这里,我是采取  弧生成器的办法 来画圆圈
+//        //而在pieChart中, 那是再采用饼状图的画法!!!!!!!
+//
+//
+//
+//
+//        //添加路径
+//        svg.append("path")
+//                .attr("d",arcPath1(dataset))
+//                .attr("transform","translate(400,800)")
+//                .attr("stroke","black")
+//                .attr("stroke-width","3px")
+//                .attr("fill","yellow");
+//
+//
+//        var arcPath2 = d3.svg.arc()
+//                .innerRadius(160)
+//                .outerRadius(180);
+//
+//
+//        svg.append("path")
+//                .attr("d",arcPath2(dataset))
+//                .attr("transform","translate(400,800)")
+//                .attr("stroke","black")
+//                .attr("stroke-width","3px")
+//                .attr("fill","red");
+//
+//                //这个地方不能像 例子那样, 在dataset里面弄许多个
+//                //然后 svg中 是   select所有的 "path"
+//                //!!!因为 每次的弧构造器是要变动的!!!!
+//
+//
+//
+//        //(1)
+//        // ???????????????????????????????????????????????????
+//        //???????????????????????????????????????????????????
+//        //???????????????????????????????????????????????????
+//        //要是弄不出圆形的话???
+//        //那就  手动的, 把    Simpson放在中间,
+//        //然后 单独专注于   第一圈的人, 第二圈的人, 第三圈的人
+//        //第一圈的人, 按照   长发型的     2条长, 2条宽 来 手动的自己设定坐标值
+//
+//
+//        //(2)
+//        //???????????????????????????????????????????????????
+//        //???????????????????????????????????????????????????
+//        //???????????????????????????????????????????????????
+//        //或者你也可以不用node 来表示一个人
+//        //因为在0000.html中, 你把innerRadius和outerRadius给调好,
+//        //展现出来也是一格一格的!!!!!
+//        // 但是这样, 就可能要遇到弦图中那种, 调整text的方法~~~~~~~
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //或者要是不把node与text绑定的话,
+//        //就靠  为每一个node都增加一格提示框的办法来变现  member
+//
+//
+//        //(3)
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //把node摆成圆圈那样, 那就还是用  bundleDiagram!!!!!!
+//        //这样每个人都是一个圆圈, 而且还有名字
+//        //只是    不要添加连线!!!!!
+//        //不要添加连线!!!!!!!!!!!!
+//        //bundleDiagram不要添加连线!!!!!
+////}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+
+
+
+
+
+
+
+
+
+
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////==============================================================================
+////==============================================================================
+////==============================================================================
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+////==============================================================================
+////==============================================================================
+//
+//
+        var k = [];
+        var h = "";
+        var kt;
+
+        for(p=0;p< e.length;p++){//e就是上面筛选出来的这个Simpson他自己参与进多少个项目
+
+            for (i = 0; i < root.length; i++) {
+
+                //对于每一个项目, 都所有的都遍历一遍,
+                //因为原始数据里面 同一个项目出现了很多次
+
+                if ((e[p]["Title"]) == root[i]["Title"]) {
+
+                    var h = root[i]["Members"].replace(/,/g, ' ');
+                    console.log(h);
+
+                    kt=h.trim();
+                    //
+                    //
+                    //
+                    //把这个字符窜的 前后  空白 给去掉
+
+                    if(kt!=urlf)
+                    //这是把作者自己本身过滤掉
+                    {
+                        k.push(kt);
+                    }
+                    //自己设想的:
+                    //假使是 这个author 涉及进了3个项目  a,b,c
+                    // a中有张三, 李四
+                    // b中有张三, 王五
+                    // c中有许一
+
+
+                    //本来自己是想分别为a,b,c建造一个数组,共3个数组的
+                    //但是这样, 就是 除了作者本身, 全部涉及到不同项目的人都在一起了
+                    //这样也就是我想要获得的
+
+                }
+            }
+
+
+        }
+
+        console.log(k);
+        console.log(k.length);  //275个
+
+        k.sort();
+        //
+        //
+        //
+        //
+        //先把k按字符表的升序给sort一遍
+        //因为这样的话我 重复的人
+        //例如  adrian  adrian adrian
+        //这些a开头重复的人他们都在一起了
+        //所以遮掩一会儿也好计算重复率
+
+
+
+
+        duplicateResult={};
+        //相当于 一个    dictionary
+
+        duplicateResult[k[0]]=1;
+        //这就是   键值对的输出
+        //例如   arry["Simpson"]=1
+
+        //输出这个  console.log(arry)的样式就为
+        //Simpson : 1
+
+
+
+        var temp=k[0];
+        //k数组的第一个数eg 这人叫 ae   赋值给    temp
+        for (var j=1;j< k.length;j++){
+            //然后马上开始给第二个数相比
+            if (temp===k[j]){
+                duplicateResult[temp]=duplicateResult[temp]+1;
+                //要是第二个数与第一个数一样
+                //原来dupicatResult[Simpson]=1, 现在+1 为2
+                //把2赋值给 duplicateResult[Simpson]
+            }else{
+                temp=k[j];
+                duplicateResult[temp]=1;
+                //如果不一样, 把k中第二个数  赋值给 temp
+                //在字典中,  第二个数对应的次数已经就是 从1次  开始了
+            }
+        }
+        console.log(duplicateResult);
+
+        console.log(Object.keys(duplicateResult).length);
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//var kk=unique(k)
+//   //k中虽然已经过滤掉了作者本身, 但是其他的member人员有重复 ,
+//   //要把数据弄成 想 捆图里面的cities数组一样,就要把重复的给去掉
+//
+//
+//console.log(kk);                 //372个
+//console.log(kk.length);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+//
+//
+//
+////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        var ppp0=[];
+        var ppp1=[];
+        var ppp2=[];
+        var ppp3=[];
+
+//       for(ee in duplicateResult){
+//
+//           switch (duplicateResult[ee])
+//           {
+//               case 1:
+//                ppp0.push(duplicateResult);
+//                break;
+//               case 2:
+//                   ppp0.push(duplicateResult);
+//                   break;
+//
+//               case duplicateResult[ee]>3&&duplicateResult[ee]<7:
+//                   ppp1.push(duplicateResult);
+//                   break;
+//               //case语句这么写是错误的!!
+//               //case语句  必须是等于一个什么!!!!!
+//
+//           }
+//
+//
+//       }
+
+        for(ee in duplicateResult){
+            if(duplicateResult[ee]>0&&duplicateResult[ee]<2){
+                ppp0.push(ee);
+                //1次, 的
+
+                //记住我这里是push的ee
+                //而不是push   duplicateResult,
+                //否则我是把dictionary给分割开来了
+            }
+
+            else if (duplicateResult[ee]>1&&duplicateResult[ee]<3){
+                ppp1.push(ee);
+                //2次,
+            }
+
+            else if (duplicateResult[ee]>2&&duplicateResult[ee]<7){
+                ppp2.push(ee);
+                //3次,4次,5次,6次
+            }
+            else
+                ppp3.push(ee);
+            //7次,8次,9次........
+        }
+
+
+
+
+
+
+        console.log(ppp0.length);
+        console.log(ppp0);
+        console.log(ppp1.length);
+
+        console.log(ppp2.length);
+        console.log(ppp3.length);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+//
+//   var chunk=[]  ;
+//   var chop=[];
+//
+//   while(kk.length>0){      //kk是用的没有重复的
+//       chunk=kk.splice(0,49);
+//       chunk.push(urlf);
+//       chop.push(chunk);
+//
+//       console.log(chunk);
+//
+//   }
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//这个只是拿 chop来当个  例子!!!!!!!!
+//真正要用的数据  可不是    chop哦!!!!!!!!!!
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
+
+
+
+//    console.log(chop);
+//    console.log(chop.length);
+//
+//    console.log(chop[1]);
+////
+////
+        kkk0=[];
+        for (qqq in ppp0)
+            kkk0.push({"name":ppp0[qqq]});
+        console.log(kkk0);
+        console.log(kkk0.length);
+
+        var members0 = {
+            name: "",
+            children:kkk0
+        };
+
+        console.log(members0);
+
+
+        kkk1=[];
+        for (qqq in ppp1)
+            kkk1.push({"name":ppp1[qqq]});
+        console.log(kkk1);
+        console.log(kkk1.length);
+
+        var members1 = {
+            name: "",
+            children:kkk1
+        };
+
+        console.log(members1);
+
+
+        kkk2=[];
+        for (qqq in ppp2)
+            kkk2.push({"name":ppp2[qqq]});
+        console.log(kkk2);
+        console.log(kkk2.length);
+
+        var members2 = {
+            name: "",
+            children:kkk2
+        };
+
+        console.log(members2);
+
+
+        kkk3=[];
+        for (qqq in ppp3)
+            kkk3.push({"name":ppp3[qqq]});
+        console.log(kkk3);
+        console.log(kkk3.length);
+
+        var members3 = {
+            name: "",
+            children:kkk3
+        };
+
+        console.log(members3);
+
+
+
+//
+//
+        var centralnode=svg.append("circle")
+                .attr("cx",250)
+                .attr("cy",255)
+                .attr("r",15)
+                .attr("fill","green");
+
+        var centraltext=svg.append("text")
+                .attr("x",215)
+                .attr("y",255)
+                .attr("class","centext")
+                .text(urlf);
+
+
+//
+//
+
+//
+//
+////|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+////|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//
+//pp
+        // 创建一个 集群图布局
+        var cluster0 = d3.layout.cluster()
+                .size([360, 30])
+                .separation(function(a, b) {
+                    return (a.parent == b.parent ? 1 : 2) / a.depth;
+                });
+//
+//        //!!!!   从这里  可以看出  集群图布局的参数可以看出，接下来节点将要分布呈圆形
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var cluster1 = d3.layout.cluster()
+                .size([360, 90])
+                .separation(function(a, b) {
+                    return (a.parent == b.parent ? 1 : 2) / a.depth;
+                });
+
+        //!!!!   从这里  可以看出  集群图布局的参数可以看出，接下来节点将要分布呈圆形
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var cluster2 = d3.layout.cluster()
+                .size([360, 160])
+                .separation(function(a, b) {
+                    return (a.parent == b.parent ? 1 : 2) / a.depth;
+                });
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var cluster3 = d3.layout.cluster()
+                .size([360, 220])
+                .separation(function(a, b) {
+                    return (a.parent == b.parent ? 1 : 2) / a.depth;
+                });
+
+
+
+
+
+
+
+//        var bundle = d3.layout.bundle();
+
+
+//pp
+        var nodes3 = cluster0.nodes(members3);
+        //cluster0.nodes是既定的   members这个数组就是例子中的cities数组
+        console.log(nodes3);
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var nodes2 = cluster1.nodes(members2);
+        //cluster1.nodes是既定的   members这个数组就是例子中的cities数组
+        console.log(nodes2);
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var nodes1 = cluster2.nodes(members1);
+        //cluster1.nodes是既定的   members这个数组就是例子中的cities数组
+        console.log(nodes1);
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        var nodes0 = cluster3.nodes(members0);
+        //cluster1.nodes是既定的   members这个数组就是例子中的cities数组
+        console.log(nodes0);
+
+
+
+
+        gBundle0 = svg.append("g")
+                .attr("transform", "translate(" + (250) + "," + 250 + ")");
+        //这个地方是添加一个分组元素   把捆图 相关的元素都放在此分组
+
+        gBundle1 = svg.append("g")
+                .attr("transform", "translate(" + (250) + "," + 250 + ")");
+        //这个地方是添加一个分组元素   把捆图 相关的元素都放在此分组
+
+        gBundle2 = svg.append("g")
+                .attr("transform", "translate(" + (250) + "," + 250+ ")");
+        //这个地方是添加一个分组元素   把捆图 相关的元素都放在此分组
+        gBundle3 = svg.append("g")
+                .attr("transform", "translate(" + (250) + "," + 265 + ")");
+        //这个地方是添加一个分组元素   把捆图 相关的元素都放在此分组
+
+
+
+//pp
+
+        var node0 = gBundle0.selectAll(".node")
+                .data( nodes0.filter(function(d) { return !d.children; }) )
+                //这句话的意思是:  只绑定没有字节点的节点
+                //这些 节点的    公共父节点不绘制
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "rotate(" + (d.x- 90) + ")translate(" + d.y + ")" + "rotate("+ (90 - d.x) +")";
+                })
+                .on("mouseover",function(d,i){
+
+
+
+//                        tooltip.html("the number of people" + ":"+" "+ d.num  )
+                    tooltip.html("name" + ":"+" "+ d.name  )
+
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 2) + "px")
+                            .style("opacity", 1.0);
+
+                    //  鼠标停留在那 , 就会 弹出一个  框来!
+
+
+                    d3.select(this)
+                            .style("opacity", 0.5);
+
+
+                })
+
+                .on("mousemove",function(d,i){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                })
+
+
+                .on("mouseout",function(d,i){
+
+                    d3.select(this)
+                            .style("opacity",1);
+
+
+
+
+                    tooltip.style("opacity",0.0);
+
+
+
+                })
+
+
+//                .on("mouseover",function(d,i){
+//
+//                    node0.nodetext.style("opacity", 0.0);
+//
+//                })
+                //??????????????????????????????????????????
+                //??????????????????????????????????????????
+                //??????????????????????????????????????????
+                ;
+
+        node0.append("circle")
+                .attr("r",3)
+                .style("fill","yellow");//第一圈  全是黄色
+                                        //下一圈, 再换颜色
+
+
+
+
+
+//        node0.append("text")
+//                .attr("dy",".4em")
+//                .attr("dx",".4em")
+//                .style("text-anchor", "start")
+//
+//                //已经是在   排列好的 node上加  文字
+//                //所以涉及一个排列文字的问题
+//                //!!!!!!
+//                //因为每个 文字的排列也已经就是  圆形排列了
+//                //只需把每个文字给rotate
+//
+//                .attr("transform", function(d,i) {
+//
+//                    return  "rotate("+ ( d.x+90) +")";
+//                })
+//
+//
+//                .text(function(d) { return d.name; })
+//
+//
+//
+//        ;
+
+        //想办法把字给调一下????????
+
+
+
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+        var node1 = gBundle1.selectAll(".node")
+                .data( nodes1.filter(function(d) { return !d.children; }) )
+                //这句话的意思是:  只绑定没有字节点的节点
+                //这些 节点的    公共父节点不绘制
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "rotate(" + (d.x- 90) + ")translate(" + d.y + ")" + "rotate("+ (90 - d.x) +")";
+                })
+                .on("mouseover",function(d,i){
+
+
+
+//                        tooltip.html("the number of people" + ":"+" "+ d.num  )
+                    tooltip.html("name" + ":"+" "+ d.name  )
+
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 2) + "px")
+                            .style("opacity", 1.0);
+
+                    //  鼠标停留在那 , 就会 弹出一个  框来!
+
+
+                    d3.select(this)
+                            .style("opacity", 0.5);
+
+
+                })
+
+                .on("mousemove",function(d,i){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                })
+
+
+                .on("mouseout",function(d,i){
+
+                    d3.select(this)
+                            .style("opacity",1);
+
+
+
+
+                    tooltip.style("opacity",0.0);
+
+
+
+                })
+
+                ;
+
+        node1.append("circle")
+                .attr("r",5)
+                .style("fill","red");//第一圈  全是黄色
+        //下一圈, 再换颜色
+
+        node1.append("text")
+                .attr("dy",".2em")
+                .attr("dx",".5em")
+                .attr("transform", function(d,i) {
+
+                    return  "rotate("+ ( d.x+90) +")";
+                })
+
+                .style("text-anchor", "start")
+                .text(function(d) { return d.name; });
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+        var node2 = gBundle2.selectAll(".node")
+                .data( nodes2.filter(function(d) { return !d.children; }) )
+                //这句话的意思是:  只绑定没有字节点的节点
+                //这些 节点的    公共父节点不绘制
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "rotate(" + (d.x- 90) + ")translate(" + d.y + ")" + "rotate("+ (90 - d.x) +")";
+                })
+                .on("mouseover",function(d,i){
+
+
+
+//                        tooltip.html("the number of people" + ":"+" "+ d.num  )
+                    tooltip.html("name" + ":"+" "+ d.name  )
+
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 2) + "px")
+                            .style("opacity", 1.0);
+
+                    //  鼠标停留在那 , 就会 弹出一个  框来!
+
+
+                    d3.select(this)
+                            .style("opacity", 0.5);
+
+
+                })
+
+                .on("mousemove",function(d,i){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                })
+
+
+                .on("mouseout",function(d,i){
+
+                    d3.select(this)
+                            .style("opacity",1);
+
+
+
+
+                    tooltip.style("opacity",0.0);
+
+
+
+                })
+
+                ;
+
+        node2.append("circle")
+                .attr("r",7)
+                .style("fill","orange");//第一圈  全是黄色
+        //下一圈, 再换颜色
+
+//        node2.append("text")
+//                .attr("dy",".2em")
+//                .attr("dx",".7em")
+//                .attr("transform", function(d,i) {
+//
+//                    return  "rotate("+ ( d.x+90) +")";
+//                })
+//
+//                .style("text-anchor", "start")
+//                .text(function(d) { return d.name; });
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+        var node3 = gBundle3.selectAll(".node")
+                .data( nodes3.filter(function(d) { return !d.children; }) )
+                //这句话的意思是:  只绑定没有字节点的节点
+                //这些 节点的    公共父节点不绘制
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "rotate(" + (d.x- 90) + ")translate(" + d.y + ")" + "rotate("+ (90 - d.x) +")";
+                })
+                .on("mouseover",function(d,i){
+
+
+
+//                        tooltip.html("the number of people" + ":"+" "+ d.num  )
+                    tooltip.html("name" + ":"+" "+ d.name  )
+
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 2) + "px")
+                            .style("opacity", 1.0);
+
+                    //  鼠标停留在那 , 就会 弹出一个  框来!
+
+
+                    d3.select(this)
+                            .style("opacity", 0.5);
+
+
+                })
+
+                .on("mousemove",function(d,i){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                })
+
+
+                .on("mouseout",function(d,i){
+
+                    d3.select(this)
+                            .style("opacity",1);
+
+
+
+
+                    tooltip.style("opacity",0.0);
+
+
+
+                })
+
+                ;
+
+        node3.append("circle")
+                .attr("r",9)
+                .style("fill","blue");
+        //下一圈, 再换颜色
+
+//        node3.append("text")
+//                .attr("dy",".2em")
+//                .attr("dx",".9em")
+//                .attr("transform", function(d,i) {
+//
+//                    return  "rotate("+ ( d.x+90) +")";
+//                })
+//
+//                .style("text-anchor", "start")
+//                .text(function(d) { return d.name; });
+
+//====================================================================
+//====================================================================
+//====================================================================
+        //关于老师提的要求,
+        //用交互式提示框那里, 画出圆形, 并分 partition
+        //然后自己   手工的画     3个圆圈
+        //然后关于如何把点放进去, 可能也需要手工了!!!!!!
+
+
+
+
+//
+//
+//
+////  每10个10个一组,     还是给simpson联系
+////   还是看simpson 哪个关系就密集
+//
+//
+//
+////把cities中的children 控制为10个一组
+////这10个中如果有 上海, 就从 connection中提 上海-到- 长沙\\\\\通过比对target来提取
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////==============================================================================
+////==============================================================================
+////==============================================================================
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+////==============================================================================
+////==============================================================================
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+
+
+
+
+
+</script>
+
+</body>
+</html>
+
