@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>projectNode</title>
+</head>
+
+<style>
+
+    .text {
+        font-size: 11px ;
+        font-family: Arial;
+        fill:black;
+        font-weight:bold;
+        fontWeight:"1900";
+        /*opacity:0.0;*/
+    }
+
+    .tooltip{
+        position: absolute;
+        width: auto;
+
+        height: auto;
+        font-family: Arial;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+
+
+
+    .tooltip0{
+
+        position: absolute;
+        width: 14%;
+
+        height: 14%;
+        font-family: Arial;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        border-radius: 5px;
+
+    }
+
+
+
+
+
+
+
+
+</style>
+
+
+
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script src="unique.js" charset="utf-8"></script>
+<script src="duplicate.js" charset="utf-8"></script>
+<script src="output.js" charset="utf-8"></script>
+
+<script>
+
+    var width = 8500;	//画布的宽度
+    var height =8500;	//画布的高度
+
+
+
+    var color = d3.scale.category10();
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width",width)
+            .attr("height",height)
+
+            ;
+
+
+    var adiv = d3.select("body").append("img")
+            //.attr("href","/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen")
+            .style("background-color","white")
+            .style("left","10px")
+            .style("top","20px")
+            .style("color","white")
+            .attr("class","tooltip0")
+//            .attr("href","/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen")
+            //这一行的意义???????????
+            //这一行的意思??????????
+            //???????????????????
+            //????????????????????
+            //????????????????????
+            //???????????????????
+            .attr("src","/WebstormProjects/summer/images/3.png")
+            .on('click', function(d,i){
+                console.log(document.referrer);
+                window.location.href="/WebstormProjects/summer/summerProject.html";
+            });
+
+
+
+
+
+
+
+    var tooltip = d3.select("body")
+            .append("div")
+            .attr("class","tooltip")
+            .style("opacity",0.0);
+
+
+
+    // the bigger the size
+    // the more the people
+
+
+    d3.json("member.json",function(error,root) {
+
+
+        if (error) {
+            return console.log(error);
+        }
+
+        console.log(root);
+
+        root.sort(function(a,b){
+            //因为是在比较对象, 所有要加  comparator
+            //如果是string的话. 就直接用  sort()
+            //因为这个地方  root里面的东西全都是 object
+            //所有要自己写comparator
+
+
+
+
+            if (a["Title"]>b["Title"])
+            return 1;
+            else if (a["Title"]<b["Title"])
+            return -1;
+            else
+            return 0;
+
+        });
+
+
+
+
+        console.log(root);
+
+
+
+
+        var TitleResults={};
+        //创建一个字典
+
+        for(i in root){
+            var title=root[i]["Title"].trim();
+            //不处理的话, 一些title最后面有空格
+            //就是自动多加引号
+            if (TitleResults[title]==undefined)
+            TitleResults[title]=root[i]["Members"].replace(/,/g, ' ');
+            //比如, 取出来的第一个title是"baby1000"
+            //因为这个时候字典是空的
+            //当然就要把这个情况给考虑上
+            //所以
+            //TitleResults[baby1000]第一次拿出来是是undefined的
+            //给他创建  mapping
+
+
+
+            else
+                TitleResults[title]=TitleResults[title]+','+root[i]["Members"].replace(/,/g, ' ');
+            //else
+            //如果 这次取得这个东西, 它不是undefined的话
+            //说明这个title不是第一次出现了
+            //相当于  第二个项目也叫"baby1000"
+            //所以把参与进来的人继续添加进去
+            //用第一次初始化后 的东西   再接着append
+
+            //不写这个逗号的话,  两个名字就粘一起了
+            //因为给的数据格式是2个一组
+            //每一组之间是有逗号的
+            //但是组与组之间需要我们自己的加逗号     ','
+
+
+
+        }
+
+
+        console.log(TitleResults);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        var newTitleResults={};
+        var titles=[];
+        var projectMembers=[];
+
+          for (ii in TitleResults ){
+//             ii是每一个key, 就是项目名字
+//             console.log(TitleResults[ii]) ;//直接访问的是member
+
+              var members = TitleResults[ii].split(',');
+              //要先split成 array
+              //因为是array才能调用 unique
+              //这样一变, 每一组每一组都是array了!!!!
+
+             console.log(members);
+              var uniqueMember=unique(members);
+              //members是array了,调用 unique函数!!!
+              //在unique函数中已经使用了trim函数了
+              //现在数据都是标准的了
+
+
+              titles.push(ii);
+              //ii是项目名
+              projectMembers.push(uniqueMember);
+
+              newTitleResults[ii]=uniqueMember;
+
+          }
+
+
+        console.log(titles);
+        console.log(projectMembers);
+        console.log(newTitleResults);
+
+
+        var edges=[];
+        for (var i=0;i<projectMembers.length-1;i++){
+
+            for (var j=i+1;j<projectMembers.length;j++){
+
+                var temp=checkDuplicate(projectMembers[i],projectMembers[j]);
+                //checkDuplicate是 duplicate里面的第二个函数
+                //只要  人名有重复, temp这个数组就  大于0
+//                console.log(temp);
+                if (temp.length>0)
+                //checkDuplicate(projectMembers[i],projectMembers[j])
+                //上面这个生成的是一个新的数组
+
+                //这里一直都是  第一个   与 第二个, 第三个,第四个 相比
+                //然后就是   第二个与  第三个, 第四个,第五个相比
+                //这样下来就保证了 所有的两两之间都比较了一次
+
+////
+//                {
+//                    for (ti in temp){
+//                        edges.push({source:i,target:j,frequency:temp.length});
+//                    }
+//
+//                }
+////这样写 是为了我想表达   有许多重复人的2个项目, 他们之间的线条会粗一些
+////比如  temp中, 若有5个人重复, temp.length就是  5
+
+                    edges.push({source:i,target:j,frequency:temp.length});
+
+            }
+
+        }
+
+
+console.log(edges);
+console.log(edges[1]["source"]);
+console.log(edges[0]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var nodes=[];
+        for(ii=0; ii<titles.length;ii++){
+
+            nodes.push({"name":titles[ii],"num":projectMembers[ii].length,"caption":projectMembers[ii] })
+
+        }
+
+
+//====================================================================================
+
+        var force = d3.layout.force()
+                .nodes(nodes) //指定节点数组
+                .links(edges) //指定连线数组
+                .size([600,450]) //指定作用域范围
+                .gravity(1)
+                .linkDistance(90) //指定连线长度
+                .linkStrength(0)
+                .charge([-600])//相互之间的作用力
+
+                ;
+
+
+
+
+
+        force.start();
+
+
+        var drag = force.drag()
+                .on("dragstart",function(d,i){
+                    d.fixed = true;    //拖拽开始后设定被拖拽对象为固定
+
+                })
+                .on("dragend",function(d,i){
+                    d3.select(this).style("fill",function(d){
+                        if (d.num>50){
+                            return "#F66464";
+                        }
+                        else if (d.num>30&& d.num<51){
+                            return "#C9C1C5";
+                        }
+                        else if (d.num>20&& d.num<31){
+                            return "#6864E7";
+                        }
+                        else if (d.num>10&& d.num<21){
+                            return "#E5C14C";
+                        }
+                        else if (d.num>0&& d.num<11){
+                            return "#BC2EB3";
+                        }
+
+                    })
+                })
+                .on("drag",function(d,i){
+                    d3.select(this).style("fill","yellow");
+                });
+
+//--------------------------------------------------------------------------------
+        //添加连线
+        var svg_edges = svg.selectAll("line")//最开始的这个地方, 其实是一个空集合
+                .data(edges)
+                .enter()
+                .append("line")
+                .attr("stroke-opacity",0.0)
+                .attr("stroke-width",function(d){
+                    if (d.frequency>16){
+                        return 9;
+                    }
+                    else if(d.frequency<17 && d.frequency>11){
+                        return 6.7;
+                    }
+                    else if(d.frequency<12 && d.frequency>7){
+                        return 4.7;
+                    }
+                    else if(d.frequency<8 && d.frequency>3){
+                        return 2.7;
+                    }
+                    else if (d.frequency<5 && d.frequency>1){
+                        return 1.2;
+                    }
+                    else (d.frequency=1)
+                        return 0.4;
+
+
+                })
+                .attr("stroke",function(d){
+
+                    if (d.frequency>0){
+                        return "rgb(255,0,0)";
+                    }
+
+
+                })
+                //  若不加  stroke 的width 的话, 线是  看不到的
+
+
+
+                ;
+
+        console.log(svg_edges);
+
+        var color = d3.scale.category20();
+
+
+
+//==========================================================================
+
+
+//=============================================================================
+
+        console.log(nodes);
+
+        //nodes这个数组, 在 刚开始   生成force图 绑定 nodes(nodes)的时候
+        //就已经改变了!!!!!!
+        //像多出老的px,py
+        //就是上一时刻 x, y轴的坐标
+
+
+        console.log(nodes.length);
+        console.log(nodes[0].caption[1]);
+        console.log(nodes[0].caption.length);
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//        var cccc=[];
+//        var kkkk=[];
+//
+//        for(kk=0;kk<nodes.length;kk++){
+//
+//            for(pp=0;pp<nodes[kk].caption.length;pp++){
+//
+//               kkkk. push(nodes[kk].caption[pp]);
+//
+//
+//            }
+//        console.log(kkkk);
+//        cccc[kk]=kkkk
+//        kkkk=[];
+//
+//       }
+//
+//        console.log(cccc);
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+        //添加节点
+        var svg_nodes = svg.selectAll("circle")//最开始的这个地方, 其实是一个空集合
+                .data(nodes)      //找   node  数集的元素
+                .enter()
+                .append("circle")   //添加足够数量的   circlr 元素
+
+//                .attr("r",function(d){
+//                    return d.num*0.5;
+//                })
+
+                .attr("r",function(d){
+                    if (d.num>50){
+                        return 35;
+                    }
+                    else if (d.num>30&& d.num<51){
+                        return 22;
+                    }
+                    else if (d.num>20&& d.num<31){
+                        return 15;
+                    }
+                    else if (d.num>10&& d.num<21){
+                        return 10;
+                    }
+                    else if (d.num>0&& d.num<11){
+                        return 5;
+                    }
+
+                })
+                .style("fill",function(d){
+                    if (d.num>50){
+                        return "#F66464";
+                    }
+                    else if (d.num>30&& d.num<51){
+                        return "#C9C1C5";
+                    }
+                    else if (d.num>20&& d.num<31){
+                        return "#6864E7";
+                    }
+                    else if (d.num>10&& d.num<21){
+                        return "#E5C14C";
+                    }
+                    else if (d.num>0&& d.num<11){
+                        return "#BC2EB3";
+                    }
+
+                })
+//                .style("fill",function(d,i){
+//                    return color(i);
+//                })
+//
+
+
+//                .call(force.drag) //使得节点能够拖动
+
+
+                .on("click",function(d,i){
+                    //显示连接线上的文字
+//
+                    svg_edges.style("stroke-opacity",function(edge){
+                        if( edge.source === d || edge.target === d ){
+                            return 1.0;
+                        }
+
+                // edge 就是    svg_edges 里面的  元素
+                // 每一个元素 就是   svg_edges里面的一条线
+                // 这个元素的  source     或者      这个元素的 target 是这个点的话
+                //opacity 就为  1.0
+
+                    });
+
+//                    svg_edges[0][i].style["stroke-opacity"]=1.0;
+
+                })
+
+//
+//                .on("click",function(d,i){
+//                    //隐去连接线上的文字
+//console.log("c");
+//                    svg_edges.style("stroke-opacity",function(edge){
+//                        if( edge.source === d || edge.target === d ){
+//                            console.log("cd");
+//
+//                            return 0.0;
+//
+//                        }
+//
+//                    });
+//
+//                })
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                .on("mouseover",function(d,i){
+
+
+//也就是说在这里新创建一个数组, 把 一个一个的数组都放进去, 也就是放在cccc里面去
+                    var cccc=[];
+                    var kkkk=[];
+
+                    for(kk=0;kk<nodes.length;kk++){
+
+                        for(pp=0;pp<nodes[kk].caption.length;pp++){
+
+                            kkkk. push(nodes[kk].caption[pp]);
+
+
+                        }
+                        console.log(kkkk);
+                        cccc[kk]=kkkk
+                        kkkk=[];
+
+                    }
+
+
+
+
+
+//                        tooltip.html("the number of people" + ":"+" "+ d.num  )
+//                    tooltip.html("<b style='background-color:red'>Title</b>"+":"+ d.name +"<br>"+
+//                            "<b style='background-color:red'>Members</b>" + ":"+" "+ "<br>"+output(cccc[i])  )
+
+                    tooltip.html("<b style='color:red'>Title</b>"+":"+" "+"'" + d.name +"'"+"<br>"+
+                                    "<b style='color:red'>Members</b>" + ":"+" "+ "<br>"+output(cccc[i])  )
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY + 2) + "px")
+                                .style("opacity", 1.0);
+
+                        //  鼠标停留在那 , 就会 弹出一个  框来!
+
+
+                        d3.select(this)
+                                .style("opacity", 0.5);
+
+
+                })
+
+                .on("mousemove",function(d,i){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                })
+
+
+                .on("mouseout",function(d,i){
+
+                    d3.select(this)
+                            .style("opacity",1);
+
+
+
+
+                    tooltip.style("opacity",0.0);
+
+
+
+                })
+
+
+
+
+
+
+
+
+
+        .call(drag)
+
+
+                ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        svg_nodes.attr("cx",function(d){ return d.x; })
+                .attr("cy",function(d){ return d.y; });
+
+
+
+
+
+        //--------------------------------------------
+        //添加描述节点的文字
+//        var svg_texts = svg.selectAll("text")
+//                .data(nodes)
+//                .enter()
+//                .append("text")
+////                .style("fill", "black")
+//                .attr("class","text")
+//                .attr("dx", 2)
+//
+//                .text(function(d){
+//                    return d.name;
+//                })
+//                ;
+
+
+        /*svg_texts.attr("x", function(d){ return d.x; })
+         .attr("y", function(d){ return d.y; });
+         */
+
+
+
+
+        //如果这里没有 dx   dy 的话    文字被默认的 从圆心  位置 开始
+        // 有 dx   并且 dx 是为 20===r的值, 说明 文字从圆的周长那个地方开始
+        //再 设定  dy的值   其实这里 设定与否不影响
+
+
+
+        //des里面所以的  数据都进了 svg_texts
+        //所以这里调用 无名函数 function(d)
+        //就是把 返回的 d.name  就是  nodes里面的属性:城市名
+
+
+
+        //console.log(dx);???????????????
+        //console.log(dy);???????????????
+
+
+
+
+
+        //  下面这段  代码 来不断更新节点与 连线的 位置
+
+        force.on("tick", function(){ //对于每一个时间间隔
+            //更新连线坐标
+            svg_edges.attr("x1",function(d){ return d.source.x; })
+                    .attr("y1",function(d){ return d.source.y; })
+                    .attr("x2",function(d){ return d.target.x; })
+                    .attr("y2",function(d){ return d.target.y; })
+
+                    .attr("stroke",function(d){
+
+                        if (d.frequency>0){
+                            return "rgb(255,0,0)";
+                        }
+
+
+                    })
+            ;
+
+
+// 而且   attr中还必须是     x1   x2  y1 y2这些东西  n1 w1  n2 w2无效!!!!
+
+
+            //更新节点坐标
+            svg_nodes.attr("cx",function(d){ return d.x; })
+                    .attr("cy",function(d){ return d.y; })
+                    .attr("r",function(d){
+                        if (d.num>50){
+                            return 35;
+                        }
+                        else if (d.num>30&& d.num<51){
+                            return 22;
+                        }
+                        else if (d.num>20&& d.num<31){
+                            return 15;
+                        }
+                        else if (d.num>10&& d.num<21){
+                            return 10;
+                        }
+                        else if (d.num>0&& d.num<11){
+                            return 5;
+                        }
+
+                    })
+            ;
+
+
+            //更新文字坐标
+//            svg_texts.attr("x", function(d){ return d.x; })
+//                    .attr("y", function(d){ return d.y; });
+
+        });
+
+
+
+
+
+
+
+    })
+
+
+
+
+</script>
+
+</body>
+</html>
