@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>000</title>
+</head>
+
+<style>
+
+    .nodetext {
+        font-size: 12px ;
+        font-family: Arial;
+        fill:	#383838;
+    }
+
+     /*p{*/
+        /*font-size: 12px ;*/
+        /*font-family: Arial;*/
+        /*fill:#000000;*/
+    /*}*/
+
+    .labeltext0 {
+        font-size: 14px ;
+        font-family: Arial;
+        font-weight:bold;
+        fill:#000001;
+    }
+
+
+    .tooltip0{
+
+        position: absolute;
+        width: 13%;
+
+        height: 13%;
+        font-family: simsun;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        border-radius: 5px;
+
+    }
+
+
+
+
+
+
+</style>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+
+
+
+<script>
+
+    var width = 1000;
+    var height = 1200;
+
+
+
+    var color = d3.scale.category20();
+
+
+
+    var svg = d3.select("body").append("svg")
+            .attr("width",width)
+            .attr("height",height);
+
+
+    var adiv = d3.select("body").append("img")
+            //.attr("href","/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen")
+            .style("background-color","red")
+            .style("left","10px")
+            .style("top","400px")
+            .style("color","red")
+            .attr("class","tooltip0")
+            //            .attr("href","/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen")
+            //             增加 a标签 里面可以用href, href就是要跳转到的界面
+            //这里增加的是  img 标签
+            //或者用a标签来 包含img 标签
+            //这一行的意义???????????
+            //这一行的意思??????????
+            //
+            .attr("src","/WebstormProjects/summer/images/3.png")
+            .on('click', function(d,i){
+                console.log(document.referrer);//这个是  这个页面的前面一个
+                window.location.href="/WebstormProjects/summer/summerProject.html";
+            });
+
+
+
+
+
+    var tooltip = d3.select("body")
+            .append("div")
+            .attr("class","tooltip")
+            .style("opacity",0.0);
+
+
+
+
+
+
+
+    d3.json("/WebstormProjects/summer/member.json",function(error,root) {
+
+
+        if (error) {
+            return console.log(error);
+        }
+        console.log(root);
+
+
+        var u=window.location.href;
+        var ur=u.split('?')[1];
+        var url=ur.split('=')[1];
+        console.log(url);
+        var urlf=url.replace(/_/g, ' ');
+//        var urlf0=urlf.replace(/-/g, ' ');
+        console.log(urlf);
+
+
+        svg.append("rect")
+                .attr("width",urlf.length *8.8)
+                .attr("height", 30)
+                .attr("fill", "#e64626")
+                .attr('transform','translate(0,10)')
+        ;
+
+
+
+        var label = svg.append("text")
+                .attr("class","labeltext0")
+                .attr("x",0)
+                .attr("y",30)
+                .text(urlf)
+                ;
+
+
+
+
+        var a=[];
+        var b="";
+        var c=0;
+        var ki=0;
+
+//===================================================================
+//===================================================================
+//===================================================================
+        for (i = 0; i < root.length; i++) {
+
+
+            if (urlf==root[i]["Title"]){
+                //因为把一个title中的许多member分成了许多行
+                //所以 在这里满足相等 满足了许多次
+                //所以相当于在这里走了许多个循环
+
+                console.log(root[i]["Members"]);
+
+                if (root[i]["Members"].match(/,/)){
+                    var e=root[i]["Members"].replace(/,/g, ' ');
+                    console.log(e);
+
+
+
+                        a.push({"mi":c,"name":e,"ki":c});
+                        //++++++++++++++++++++++++++++++++++++++
+                        //**************************************
+                        //在这里改变  数组的 格式!!!!!!!!!!!!!!!!!
+                        //增加了memi 与 name 这2个属性
+                        //**************************************
+                        //++++++++++++++++++++++++++++++++++++++
+                        c=c+1;
+                        //虽然第一  次匹配 了2个数,c从0变到1了
+                        //第二次又匹配上, c就开始从1的基础上再加了
+                        //**********************************
+                        //c是一直不停的 递加递加 递加
+                    }
+
+
+                else {
+                    a.push({"mi":c,"name":root[i]["Members"],"ki":c});
+                    c=c+1;
+                }
+
+            }
+
+
+        }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//===================================================================
+//===================================================================
+//===================================================================
+
+        console.log(a);
+if(a.length>0){
+
+    console.log(a[0]["name"]);
+
+    var aa = [];
+    var bb = "";
+    var cc = 0;
+    var ee = [];
+
+    var counter = 0;
+
+
+    var ppp=[];
+    var lll = 0;
+
+
+
+
+    for(al in a){
+
+        for (i = 0; i < root.length; i++) {
+
+            if (root[i]["Members"].match(/,/)) {
+                var g = root[i]["Members"].replace(/,/g, ' ');
+                console.log(g);
+
+
+                if (g == a[al]["name"]) {
+                    ee.push({"mmi": counter, "Title": root[i]["Title"]});
+                    counter = counter + 1;
+                }
+                else{
+                    if (root[i]["Members"] == a[al]["name"]) {
+                        ee.push({"mmi": counter, "Title": root[i]["Title"]});
+                        counter = counter + 1;
+                    }
+                }
+
+
+
+            }
+
+
+
+
+        }
+
+        counter =0;
+        ppp.push(ee);
+        ee=[];
+
+
+    }
+
+    console.log(ppp);
+
+
+
+//????
+//上面再a中的这个循环,  a0 就是simpson  ,所以ppp中的第一项数组有13个, 就是Simpson的
+
+
+    for(bbbbi in a){
+
+        a[bbbbi]["mi"]=ppp[bbbbi].length;
+        console.log(a[bbbbi]["mi"]);
+
+
+        //通过分别修改 每个人的
+
+    }
+
+
+
+
+
+
+//===================================================================
+//===================================================================
+//===================================================================
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+
+    var force = d3.layout.force()
+            .nodes(a)
+
+            .size([720,490])//  靠这个来控制pop up 出来的 位置~
+            .gravity(0.4)
+            .charge(-370)
+            .start();
+
+
+    var svg_nodes = svg.selectAll("circle")
+            .data(a)
+            .enter()
+            .append("circle")
+
+            .attr("r",function(d){
+                if (d.mi>14){
+                    return 35;
+                }
+                else if (d.mi>12&& d.mi<15){
+                    return 22;
+                }
+                else if (d.mi>8&& d.mi<13){
+                    return 15;
+                }
+                else if (d.mi>3&& d.mi<9){
+                    return 10;
+                }
+                else if (d.mi>0&& d.mi<4){
+                    return 5;
+                }
+
+            })
+
+//            .attr("r", function(d){
+//
+//
+//                return d["mi"]*4;
+//
+//                //绑定还是绑定   数组a,   把数组a中的mi的 数值给修改了!!!!
+//                //根据数组a中的 每一个项的人名  来map出去
+//
+//
+//
+//            })
+
+
+
+
+
+            .attr("ki",function(d){
+                return d["ki"];
+                //d就是每一个object,
+                //return  每一个object的mi属性
+                //就是对应的一个一个 0,1,2,3,4,5,6,7,8,9,
+                //!!!!!
+                //这个是访问对象属性的方法
+                //每个对象之后 d[]来访问这个对象属性
+            })
+            //把 mi 属性给增加进node的每一个圆圈中去
+
+            .style("fill",function(d){
+                if (d.mi>14){
+                    return "#F66464";
+                }
+                else if (d.mi>12&& d.mi<15){
+                    return "#C9C1C5";
+                }
+                else if (d.mi>8&& d.mi<13){
+                    return "#6864E7";
+                }
+                else if (d.mi>3&& d.mi<9){
+                    return "#E5C14C";
+                }
+                else if (d.mi>0&& d.mi<4){
+                    return "#BC2EB3";
+                }
+
+            })
+
+
+
+//            .style("fill",function(d,i){
+//                return color(i);
+//            })
+
+            .on("click",function(d,i){
+
+                var mid=this.getAttribute("ki");
+                var Title=document.querySelector("text[ki='"+mid+"']").innerHTML;
+                //mi与 var  mid 相比
+                console.log(Title);
+
+
+
+//                    var url01=Title.replace(/ /g, '_');
+//                    console.log(url01);
+//
+                var url000=Title.replace(/ /g,'_');
+
+
+                window.location.href="/WebstormProjects/summer/00/00X/000"+(0).toString() + ".html?="+url000+"&"+url;
+
+
+
+
+            })
+
+
+            .call(force.drag)
+
+
+
+            ;
+
+
+
+//
+    var nodes_text = svg.selectAll(".nodetext")
+            .data(a)
+            .enter()
+            .append("text")
+            .attr("class","nodetext")
+
+            //                .attr("dx",-10)
+            //                .attr("dy",-10)
+            //                不要这2行就是直接从圆心的那个位置来添加text
+
+            .attr("ki",function(d){
+                return d["ki"];
+            })
+            .style("text-anchor", "middle")
+            .text(function(d){
+//                    var t=d.name.split(' ');
+//                    var resultText=t[0]+"";
+//                    for (i=1;i< t.length-1;i++){
+//                        resultText=resultText+t[i]+"";
+//                    }
+//                    resultText=resultText+t[t.length-1];
+//                    //!!!!
+//                    //最后一个数不用 加空格
+//                    console.log(resultText);
+//                    return resultText;
+                return d.name;
+            });
+
+
+
+
+    force.on("tick", function(){
+
+
+
+
+        svg_nodes.attr("cx",function(d){ return d.x +2; });
+        svg_nodes.attr("cy",function(d){ return d.y +2; });
+        //调这个可以调节  text 与node之间的 距离
+
+
+        nodes_text.attr("x",function(d){ return d.x });
+        nodes_text.attr("y",function(d){ return d.y  });
+
+    });
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+
+
+
+
+</script>
+
+</body>
+</html>
