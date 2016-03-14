@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simpson</title>
+</head>
+
+
+<style>
+
+    .line{
+        fill:none;
+        stroke:black;
+        stroke-width:3px;
+
+    }
+
+    .labeltext0 {
+        font-size: 16px ;
+        font-family: Arial;
+        font-weight:bold;
+        fill:#000001;
+    }
+
+
+
+    .tooltip0{
+
+        position: absolute;
+        width: 15%;
+
+        height: 15%;
+        font-family: Arial;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        border-radius: 5px;
+
+    }
+
+
+
+
+</style>
+
+
+
+
+
+
+
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script>
+
+
+
+    var width = 1800;
+    var height = 1800;
+
+
+
+    var color = d3.scale.category20();
+
+
+
+    var svg = d3.select("body").append("svg")
+            .attr("width",width)
+            .attr("height",height);
+
+
+
+    var u = window.location.href;
+    var ur = u.split('?')[1];
+    var url = ur.split('=')[1];
+    console.log(url);
+
+    var urk=url.split('&')[0];
+    var ukk=url.split('&')[1];
+
+    var urlf = urk.replace(/_/g, ' ');
+    console.log(urlf);
+
+
+
+    var adiv = d3.select("body").append("img")
+            //.attr("href","/WebstormProjects/summer/00/00X/0000.html?=Simpson__Stephen")
+            .style("background-color","red")
+            .style("left","20px")
+            .style("top","390px")
+            .style("color","red")
+            .attr("class","tooltip0")
+//            .attr("href","/WebstormProjects/summer/00/00X/000.html?=Simpson__Stephen")
+            //这一行的意义???????????
+            //这一行的意思??????????
+            //???????????????????
+            //????????????????????
+            //????????????????????
+            //???????????????????1
+            .attr("src","/WebstormProjects/summer/images/bv.png")
+            .on('click', function(d,i){
+                console.log(document.referrer);
+                window.location.href="/WebstormProjects/summer/00/00"+(i).toString()+ ".html?="+ukk;
+                //?????????????
+                //???????????
+            });
+    //    a.append("img").attr("border","1").attr("src","/WebstormProjects/summer/images/option.png")
+    //            .attr("width","150")
+    //            .attr("height","150").attr('transform', 'translate(500,100)');
+
+    var tooltip = d3.select("body")
+            .append("div")
+            .attr("class","tooltip")
+            .style("opacity",0.0);
+
+
+
+
+    var u = window.location.href;
+    var ur = u.split('?')[1];
+    var url = ur.split('=')[1];
+
+    var urk =url.split('&')[0];
+    console.log(url);
+
+    var urlf = urk.replace(/_/g, ' ');
+    console.log(urlf);
+
+
+
+
+
+
+
+
+
+    var nodes = [ { name: urlf,mi:0 }, { name: "co-authors",mi:1 },
+        { name: "the total projects",mi:2 }, { name: "publications" ,mi:3},
+       ];
+
+
+    var edges = [ { source : 0 , target: 1 } , { source : 0 , target: 2 } ,
+        { source : 0 , target: 3 }  ];
+
+
+console.log(nodes);
+console.log(nodes[3].mi)   ;
+
+
+    var force = d3.layout.force()
+            .nodes(nodes) //指定节点数组
+            .links(edges) //指定连线数组
+            .size([600,450]) //指定作用域范围
+            .linkDistance(200) //指定连线长度
+            .charge([-400])//相互之间的作用力
+            .gravity(0.06);
+
+
+    force.start();//
+    //就是讲 alpha 的值  设置为 0.1 后然后开始计算
+    //alpha值会不断减小,直到减少到0.005, 动画停止!!!!
+
+
+
+
+    var svg_edges = svg.selectAll("line")//最开始的这个地方, 其实是一个空集合
+            .data(edges)
+            .enter()
+            .append("line")
+            .attr("class","line")
+//            .style("stroke","#000000")
+//            .style("stroke-width",3)
+            //  若不加  stroke 的width 的话, 线是  看不到的
+
+
+            ;
+
+
+    var svg_nodes = svg.selectAll("circle")//最开始的这个地方, 其实是一个空集合
+            .data(nodes)      //找   node  数集的元素
+            .enter()
+            .append("circle")   //添加足够数量的   circlr 元素
+            .attr("r",function(d){
+                if (d.mi==0){
+                    return 10;
+                }
+                else{
+                    return 45
+                }
+
+            })
+
+
+            .attr("mi",function(d){
+                return d["mi"];
+                //d就是每一个object,
+                //return  每一个object的mi属性
+                //就是对应的一个一个 0,1,2,3,4,5,6,7,8,9,
+                //!!!!!
+                //这个是访问对象属性的方法
+                //每个对象之后 d[]来访问这个对象属性
+            })
+
+//
+
+            .style("fill",function(d){
+                if (d.mi==0){
+                    return "#e64626";
+                }
+                else if (d.mi==1){
+                    return "#FFB800";
+                }
+                else if (d.mi==2){
+                    return "#0148A4";
+                }
+                else if (d.mi==3){
+                    return "#E0E0E0";
+                }
+
+
+            })
+
+
+            .on("click",function(d,i){
+
+//                var mid=this.getAttribute("mi");
+//
+//                var Title=document.querySelector("text[mi='"+mid+"']").innerHTML;
+
+            if  (d.mi !=0) {
+
+                var fi = this.getAttribute("mi");
+                fi = 0;
+                var Title = document.querySelector("text[mi='" + fi + "']").innerHTML;
+                //mi与 var  mid 相比
+                console.log(Title);
+
+
+//
+                var url000 = Title.replace(/ /g, '_');
+
+
+                window.location.href = "/WebstormProjects/summer/00/00X/0000n/" + (i).toString() + ".html?=" + url000+"&"+ukk;
+
+            }
+
+
+            })
+
+
+
+            ////!!! 这个地方 传递的  url000给改变一下!!!
+            ////因为我们只想 Simpson的名字传递进去,
+            //也就只是数组的第一个的   text传递!!
+            //所以就设定好
+            //像members就不传递过去!!
+
+
+
+
+
+//
+//            .call(force.drag) //使得节点能够拖动
+
+            ;
+
+    var svg_texts = svg.selectAll("text")
+            .data(nodes)
+            .enter()
+            .append("text")
+            .style("fill", "black")
+            .attr("dx", 10)
+
+            .attr("mi",function(d){
+                return d["mi"];
+            })
+            .text(function(d){
+                return d.name;
+            })
+            ;
+
+
+    svg.append("rect")
+            .attr("width", urlf.length * 9)
+            .attr("height", 30)
+            .attr("fill", "#FFB800")
+            .attr('transform', 'translate(0,10)')
+    ;
+
+
+    var label = svg.append("text")
+            .attr("class", "labeltext0")
+            .attr("x", 0)
+            .attr("y", 30)
+            .text(urlf)
+            ;
+
+
+
+
+
+
+    force.on("tick", function(){ //对于每一个时间间隔
+        // force.on(type, listener){
+        //
+        // type 有三种事件  start,tick,end        listener 是监听器
+        //tick 代表的是 运动的每一步
+        //
+        //当对应事件发生! 调用 监听器!!!!!!
+
+        // }
+
+
+
+
+        //更新连线坐标
+        svg_edges.attr("x1",function(d){ return d.source.x; })
+                .attr("y1",function(d){ return d.source.y; })
+                .attr("x2",function(d){ return d.target.x; })
+                .attr("y2",function(d){ return d.target.y; });
+
+
+// 而且   attr中还必须是     x1   x2  y1 y2这些东西  n1 w1  n2 w2无效!!!!
+
+
+        //更新节点坐标
+        svg_nodes.attr("cx",function(d){ return d.x; })
+                .attr("cy",function(d){ return d.y; })
+                .attr("r",function(d){
+                    if (d.mi==0){
+                        return 10;
+                    }
+                    else{
+                        return 45
+                    }
+
+                })
+        ;
+
+
+        //更新文字坐标
+        svg_texts.attr("x", function(d){ return d.x; })
+                .attr("y", function(d){ return d.y; });
+
+
+
+
+
+
+
+
+
+
+    });
+
+
+
+
+</script>
+
+</body>
+</html>
+
